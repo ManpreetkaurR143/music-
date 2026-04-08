@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GDMusic - Premium Music Marketplace by GDTHEGREATEMAN</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script tailwind>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        neon: {
+          purple: '#a855f7',
+          blue: '#3b82f6',
+          pink: '#ec4899',
+          green: '#22c55e',
+        },
+        dark: {
+          900: '#0a0a0f',
+          800: '#111118',
+          700: '#1a1a2e',
+          600: '#16213e',
+        }
+      },
+      fontFamily: {
+        orbitron: ['Orbitron', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
+      }
+    }
+  }
+}
+</script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: #0a0a0f; color: #fff; overflow-x: hidden; }
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #111118; }
+::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #a855f7, #3b82f6); border-radius: 4px; }
+
+/* Animations */
+@keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
+@keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 20px rgba(168,85,247,0.3); } 50% { box-shadow: 0 0 40px rgba(168,85,247,0.6); } }
+@keyframes gradient-shift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+@keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(60px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideIn { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes waveform { 0%, 100% { height: 4px; } 50% { height: 24px; } }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes neon-flicker { 0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { text-shadow: 0 0 10px #a855f7, 0 0 20px #a855f7, 0 0 40px #a855f7, 0 0 80px #a855f7; } 20%, 24%, 55% { text-shadow: none; } }
+@keyframes particles { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; } }
+
+.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+.animate-gradient { background-size: 200% 200%; animation: gradient-shift 4s ease infinite; }
+.animate-beat { animation: beat 1s ease-in-out infinite; }
+.animate-slideUp { animation: slideUp 0.8s ease forwards; }
+.animate-slideIn { animation: slideIn 0.6s ease forwards; }
+.animate-fadeIn { animation: fadeIn 1s ease forwards; }
+.animate-spin-slow { animation: spin 8s linear infinite; }
+
+/* Glassmorphism */
+.glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); }
+.glass-strong { background: rgba(255,255,255,0.06); backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.12); }
+.glass-card { background: linear-gradient(135deg, rgba(168,85,247,0.1), rgba(59,130,246,0.05)); backdrop-filter: blur(20px); border: 1px solid rgba(168,85,247,0.2); }
+
+/* Neon Effects */
+.neon-text { text-shadow: 0 0 10px rgba(168,85,247,0.5), 0 0 20px rgba(168,85,247,0.3); }
+.neon-border { box-shadow: 0 0 15px rgba(168,85,247,0.3), inset 0 0 15px rgba(168,85,247,0.05); }
+.gradient-text { background: linear-gradient(135deg, #a855f7, #3b82f6, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.gradient-border { position: relative; }
+.gradient-border::before { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; background: linear-gradient(135deg, #a855f7, #3b82f6); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+
+/* Waveform */
+.waveform-bar { width: 3px; background: linear-gradient(to top, #a855f7, #3b82f6); border-radius: 2px; animation: waveform 1s ease-in-out infinite; }
+
+/* Cards */
+.beat-card { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.beat-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 20px 60px rgba(168,85,247,0.2); }
+
+/* Hero particles */
+.particle { position: absolute; width: 4px; height: 4px; background: #a855f7; border-radius: 50%; animation: particles linear infinite; opacity: 0.6; }
+
+/* Custom scrollbar for sections */
+.custom-scroll { scrollbar-width: thin; scrollbar-color: #a855f7 #1a1a2e; }
+
+/* Modal */
+.modal-overlay { backdrop-filter: blur(8px); background: rgba(0,0,0,0.7); }
+
+/* Progress bar */
+.progress-bar { background: linear-gradient(90deg, #a855f7, #3b82f6); transition: width 0.3s ease; }
+
+/* Tag styles */
+.tag { background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.3); color: #a855f7; }
+
+/* Waveform visualizer */
+.visualizer { display: flex; align-items: center; gap: 2px; height: 30px; }
+.v-bar { width: 3px; background: linear-gradient(to top, #a855f7, transparent); border-radius: 2px; transition: height 0.2s; }
+
+input:focus, select:focus { outline: none; border-color: #a855f7 !important; box-shadow: 0 0 0 3px rgba(168,85,247,0.2); }
+
+.page { display: none; }
+.page.active { display: block; }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer-text {
+  background: linear-gradient(90deg, #a855f7 0%, #3b82f6 25%, #ec4899 50%, #3b82f6 75%, #a855f7 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+
+@media (max-width: 768px) {
+  .hero-title { font-size: 2.5rem !important; }
+  .grid-beats { grid-template-columns: 1fr !important; }
+}
+</style>
+</head>
+<body class="bg-dark-900 min-h-screen">
+
+<!-- Navigation -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 glass-strong transition-all duration-500">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 md:h-20">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="showPage('home')">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-neon-purple to-neon-blue flex items-center justify-center animate-pulse-glow">
+          <i class="fas fa-wave-square text-white text-lg"></i>
+        </div>
+        <span class="font-orbitron text-xl font-bold gradient-text">GD<span class="text-white">MUSIC</span></span>
+      </div>
+
+      <div class="hidden md:flex items-center gap-8">
+        <a onclick="showPage('home')" class="text-gray-300 hover:text-neon-purple transition cursor-pointer text-sm font-medium">Home</a>
+        <a onclick="showPage('marketplace')" class="text-gray-300 hover:text-neon-purple transition cursor-pointer text-sm font-medium">Marketplace</a>
+        <a onclick="showPage('admin')" class="text-gray-300 hover:text-neon-purple transition cursor-pointer text-sm font-medium">Admin</a>
+        <a class="text-gray-300 hover:text-neon-purple transition cursor-pointer text-sm font-medium">Contact</a>
+      </div>
+
+      <div class="flex items-center gap-3 md:gap-4">
+        <button onclick="toggleCart()" class="relative p-2 rounded-xl glass hover:bg-white/10 transition">
+          <i class="fas fa-shopping-cart text-gray-300"></i>
+          <span id="cart-count" class="absolute -top-1 -right-1 w-5 h-5 bg-neon-purple rounded-full text-[10px] flex items-center justify-center font-bold">0</span>
+        </button>
+        <div id="auth-buttons">
+          <button onclick="openModal('login')" class="px-4 py-2 glass rounded-xl text-sm font-medium hover:bg-white/10 transition">Login</button>
+          <button onclick="openModal('signup')" class="px-4 py-2 bg-gradient-to-r from-neon-purple to-neon-blue rounded-xl text-sm font-semibold hover:opacity-90 transition hidden md:inline-block">Sign Up</button>
+        </div>
+        <div id="user-menu" class="hidden items-center gap-2">
+          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-neon-purple to-neon-blue flex items-center justify-center cursor-pointer" onclick="showPage('profile')">
+            <i class="fas fa-user text-sm"></i>
+          </div>
+        </div>
+      </div>
+
+      <button class="md:hidden p-2" onclick="toggleMobileMenu()">
+        <i class="fas fa-bars text-gray-300 text-xl"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="md:hidden hidden glass-strong">
+    <div class="px-4 py-4 space-y-3">
+      <a onclick="showPage('home');toggleMobileMenu()" class="block py-2 text-gray-300 hover:text-neon-purple cursor-pointer">Home</a>
+      <a onclick="showPage('marketplace');toggleMobileMenu()" class="block py-2 text-gray-300 hover:text-neon-purple cursor-pointer">Marketplace</a>
+      <a onclick="showPage('admin');toggleMobileMenu()" class="block py-2 text-gray-300 hover:text-neon-purple cursor-pointer">Admin Panel</a>
+      <a class="block py-2 text-gray-300 hover:text-neon-purple cursor-pointer">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ HOME PAGE ============ -->
+<div id="page-home" class="page active">
+  <!-- Hero Section -->
+  <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+    <!-- Background Effects -->
+    <div class="absolute inset-0">
+      <div class="absolute top-20 left-10 w-72 h-72 bg-neon-purple/20 rounded-full blur-[120px] animate-float"></div>
+      <div class="absolute bottom-20 right-10 w-96 h-96 bg-neon-blue/15 rounded-full blur-[150px] animate-float" style="animation-delay: -3s;"></div>
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-neon-pink/5 rounded-full blur-[200px]"></div>
+    </div>
+    <!-- Particles -->
+    <div id="particles" class="absolute inset-0 pointer-events-none"></div>
+
+    <!-- Grid Lines -->
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(rgba(168,85,247,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(168,85,247,0.5) 1px, transparent 1px); background-size: 60px 60px;"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 text-center">
+      <div class="animate-slideUp">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8" style="animation-delay: 0.2s; opacity: 0;">
+          <span class="w-2 h-2 bg-neon-green rounded-full animate-beat"></span>
+          <span class="text-sm text-gray-400">Powered by <strong class="text-neon-purple">GDTHEGREATEMAN</strong></span>
+        </div>
+
+        <h1 class="hero-title font-orbitron text-5xl md:text-7xl lg:text-8xl font-black mb-6 leading-tight" style="animation-delay: 0.4s; opacity: 0;">
+          <span class="shimmer-text">PREMIUM</span><br>
+          <span class="text-white">MUSIC</span> <span class="gradient-text">MARKETPLACE</span>
+        </h1>
+
+        <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-10" style="animation-delay: 0.6s; opacity: 0;">
+          Discover, preview, and license high-quality beats from top producers. 
+          Every track crafted with passion, delivered with perfection.
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16" style="animation-delay: 0.8s; opacity: 0;">
+          <button onclick="showPage('marketplace')" class="group px-8 py-4 bg-gradient-to-r from-neon-purple to-neon-blue rounded-2xl font-bold text-lg hover:scale-105 transition-all duration-300 flex items-center gap-3 shadow-lg shadow-neon-purple/30">
+            <i class="fas fa-play"></i> Explore Beats
+            <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+          </button>
+          <button onclick="openModal('signup')" class="px-8 py-4 glass rounded-2xl font-semibold text-lg hover:bg-white/10 transition border border-white/10">
+            <i class="fas fa-user-plus mr-2"></i> Start Free Trial
+          </button>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-3 gap-4 md:gap-8 max-w-2xl mx-auto" style="animation-delay: 1s; opacity: 0;">
+          <div class="text-center">
+            <div class="font-orbitron text-3xl md:text-4xl font-bold gradient-text" id="stat-beats">500+</div>
+            <div class="text-gray-500 text-sm mt-1">Premium Beats</div>
+          </div>
+          <div class="text-center">
+            <div class="font-orbitron text-3xl md:text-4xl font-bold gradient-text">50+</div>
+            <div class="text-gray-500 text-sm mt-1">Artists</div>
+          </div>
+          <div class="text-center">
+            <div class="font-orbitron text-3xl md:text-4xl font-bold gradient-text">100%</div>
+            <div class="text-gray-500 text-sm mt-1">Royalty Free</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+      <i class="fas fa-chevron-down text-neon-purple/50 text-2xl"></i>
+    </div>
+  </section>
+
+  <!-- Featured Categories -->
+  <section class="py-20 relative">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-14">
+        <span class="text-neon-purple text-sm font-semibold tracking-widest uppercase">Browse by Genre</span>
+        <h2 class="font-orbitron text-3xl md:text-4xl font-bold mt-2">Featured <span class="gradient-text">Categories</span></h2>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
+        <div onclick="filterByCategory('hip-hop')" class="group glass-card rounded-2xl p-6 text-center cursor-pointer beat-card">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-orange-500/20 to-red-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <i class="fas fa-fire text-2xl text-orange-400"></i>
+          </div>
+          <h3 class="font-semibold text-sm">Hip-Hop</h3>
+          <p class="text-gray-500 text-xs mt-1">120+ Beats</p>
+        </div>
+
+        <div onclick="filterByCategory('trap')" class="group glass-card rounded-2xl p-6 text-center cursor-pointer beat-card">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-neon-purple/20 to-neon-pink/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <i class="fas fa-bolt text-2xl text-neon-purple"></i>
+          </div>
+          <h3 class="font-semibold text-sm">Trap</h3>
+          <p class="text-gray-500 text-xs mt-1">95+ Beats</p>
+        </div>
+
+        <div onclick="filterByCategory('lofi')" class="group glass-card rounded-2xl p-6 text-center cursor-pointer beat-card">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-blue-400/20 to-cyan-400/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <i class="fas fa-headphones text-2xl text-blue-400"></i>
+          </div>
+          <h3 class="font-semibold text-sm">Lo-Fi</h3>
+          <p class="text-gray-500 text-xs mt-1">80+ Beats</p>
+        </div>
+
+        <div onclick="filterByCategory('punjabi')" class="group glass-card rounded-2xl p-6 text-center cursor-pointer beat-card">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-amber-500/20 to-yellow-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <i class="fas fa-music text-2xl text-amber-400"></i>
+          </div>
+          <h3 class="font-semibold text-sm">Punjabi</h3>
+          <p class="text-gray-500 text-xs mt-1">60+ Beats</p>
+        </div>
+
+        <div onclick="filterByCategory('pop')" class="group glass-card rounded-2xl p-6 text-center cursor-pointer beat-card">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-pink-500/20 to-rose-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <i class="fas fa-star text-2xl text-pink-400"></i>
+          </div>
+          <h3 class="font-semibold text-sm">Pop</h3>
+          <p class="text-gray-500 text-xs mt-1">70+ Beats</p>
+        </div>
+
+        <div onclick="filterByCategory('cinematic')" class="group glass-card rounded-2xl p-6 text-center cursor-pointer beat-card">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <i class="fas fa-film text-2xl text-emerald-400"></i>
+          </div>
+          <h3 class="font-semibold text-sm">Cinematic</h3>
+          <p class="text-gray-500 text-xs mt-1">45+ Beats</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trending Beats -->
+  <section class="py-20 relative">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex items-center justify-between mb-14">
+        <div>
+          <span class="text-neon-purple text-sm font-semibold tracking-widest uppercase">Top Picks</span>
+          <h2 class="font-orbitron text-3xl md:text-4xl font-bold mt-2">Trending <span class="gradient-text">Beats</span></h2>
+        </div>
+        <button onclick="showPage('marketplace')" class="hidden md:flex items-center gap-2 px-6 py-3 glass rounded-xl hover:bg-white/10 transition text-sm font-medium">
+          View All <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+
+      <div id="trending-beats" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <!-- Beats will be injected by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- AI Recommendation Section -->
+  <section class="py-20 relative">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="glass-card rounded-3xl p-8 md:p-14 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-neon-purple/10 rounded-full blur-[100px]"></div>
+        <div class="absolute bottom-0 left-0 w-48 h-48 bg-neon-blue/10 rounded-full blur-[80px]"></div>
+        <div class="relative z-10 flex flex-col lg:flex-row items-center gap-10">
+          <div class="flex-1">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neon-purple/20 text-neon-purple text-xs font-semibold mb-4">
+              <i class="fas fa-robot"></i> AI-POWERED
+            </div>
+            <h2 class="font-orbitron text-3xl md:text-4xl font-bold mb-4">Personalized <span class="gradient-text">Beat Recommendations</span></h2>
+            <p class="text-gray-400 mb-6">Our AI analyzes your style, mood, and preferences to suggest the perfect beats for your next project. Get matched with tracks that resonate with your artistic vision.</p>
+            <button onclick="showPage('marketplace')" class="px-8 py-4 bg-gradient-to-r from-neon-purple to-neon-blue rounded-2xl font-bold hover:scale-105 transition-all shadow-lg shadow-neon-purple/30">
+              <i class="fas fa-wand-magic-sparkles mr-2"></i> Get AI Recommendations
+            </button>
+          </div>
+          <div class="flex-1 flex justify-center">
+            <div class="relative w-64 h-64">
+              <div class="absolute inset-0 rounded-full bg-gradient-to-br from-neon-purple/20 to-neon-blue/20 animate-spin-slow"></div>
+              <div class="absolute inset-4 rounded-full glass-card flex items-center justify-center">
+                <i class="fas fa-brain text-5xl gradient-text"></i>
+              </div>
+              <div class="absolute top-4 right-8 w-12 h-12 glass rounded-xl flex items-center justify-center animate-float">
+                <i class="fas fa-music text-neon-purple"></i>
+              </div>
+              <div class="absolute bottom-4 left-8 w-12 h-12 glass rounded-xl flex items-center justify-center animate-float" style="animation-delay:-2s;">
+                <i class="fas fa-microphone text-neon-blue"></i>
+              </div>
+              <div class="absolute top-1/2 left-0 w-10 h-10 glass rounded-lg flex items-center justify-center animate-float" style="animation-delay:-1s;">
+                <i class="fas fa-guitar text-neon-pink text-sm"></i>
+              </div>
+              <div class="absolute top-1/2 right-0 w-10 h-10 glass rounded-lg flex items-center justify-center animate-float" style="animation-delay:-3s;">
+                <i class="fas fa-compact-disc text-neon-green text-sm"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Artist Section -->
+  <section class="py-20 relative">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-14">
+        <span class="text-neon-purple text-sm font-semibold tracking-widest uppercase">The Creator</span>
+        <h2 class="font-orbitron text-3xl md:text-4xl font-bold mt-2">Meet <span class="gradient-text">GDTHEGREATEMAN</span></h2>
+      </div>
+      <div class="max-w-4xl mx-auto glass-card rounded-3xl p-8 md:p-12">
+        <div class="flex flex-col md:flex-row items-center gap-8">
+          <div class="w-40 h-40 rounded-full bg-gradient-to-br from-neon-purple to-neon-blue p-1 flex-shrink-0 animate-pulse-glow">
+            <div class="w-full h-full rounded-full bg-dark-800 flex items-center justify-center">
+              <span class="font-orbitron text-4xl font-black gradient-text">GD</span>
+            </div>
+          </div>
+          <div class="text-center md:text-left">
+            <h3 class="font-orbitron text-2xl font-bold mb-2">GDTHEGREATEMAN</h3>
+            <p class="text-neon-purple text-sm font-medium mb-3">Producer • Beatmaker • Sound Engineer</p>
+            <p class="text-gray-400 mb-6">The sole creator and administrator of GDMusic. Crafting premium, high-quality beats across Hip-Hop, Trap, Lo-Fi, Punjabi, Pop, and Cinematic genres. Every beat is meticulously produced, mixed, and mastered to perfection.</p>
+            <div class="flex items-center justify-center md:justify-start gap-3">
+              <a class="w-10 h-10 rounded-xl glass flex items-center justify-center hover:bg-white/10 transition cursor-pointer"><i class="fab fa-instagram text-gray-400"></i></a>
+              <a class="w-10 h-10 rounded-xl glass flex items-center justify-center hover:bg-white/10 transition cursor-pointer"><i class="fab fa-twitter text-gray-400"></i></a>
+              <a class="w-10 h-10 rounded-xl glass flex items-center justify-center hover:bg-white/10 transition cursor-pointer"><i class="fab fa-youtube text-gray-400"></i></a>
+              <a class="w-10 h-10 rounded-xl glass flex items-center justify-center hover:bg-white/10 transition cursor-pointer"><i class="fab fa-spotify text-gray-400"></i></a>
+              <a class="w-10 h-10 rounded-xl glass flex items-center justify-center hover:bg-white/10 transition cursor-pointer"><i class="fab fa-tiktok text-gray-400"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="py-20 relative">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-14">
+        <span class="text-neon-purple text-sm font-semibold tracking-widest uppercase">Reviews</span>
+        <h2 class="font-orbitron text-3xl md:text-4xl font-bold mt-2">What <span class="gradient-text">Artists Say</span></h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass-card rounded-2xl p-6 beat-card">
+          <div class="flex gap-1 mb-4">
+            <i class="fas fa-star text-yellow-400 text-sm"></i>
+            <i class="fas fa-star text-yellow-400 text-sm"></i>
+            <i class="fas fa-star text-yellow-400 text-sm"></i>
+            <i class="fas fa-star text-yellow-400 text-sm"></i>
+            <i class="fas fa-star text-yellow-400 text-sm"></i>
+          </div>
+          <p class="text-gray-300 text-sm mb-4">"GDMusic has the dopest beats I've ever come across. GDTHEGREATEMAN really understands what artists need. The quality is unmatched!"</p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-neon-purple to-neon-pink flex items-center justify-center text-sm font-bold">AK</div>
+            <div>
+              <p class="font-semibold text-sm">Aryan Khanna</p>
+              <p class="text-gray-500 text-xs">Hip-Hop Artist</p>
+            </div>
+          </div>
+        </div>
+        <div class="glass-card rounded-2xl p-6 beat-card">
+          <div class="flex gap-1 mb-4">
+            <i class="fas fa-star text-yellow-400 text-sm"></i>
+            <i class="fas fa-star text-yellow-400 text-sm"></i>
+            <i class="fas fa-star text-yellow-400 text-sm"></i>
+            <i class="fas fa-star text-yellow-400 text-sm"></i>
+            <i class="fas fa-star text-yellow-400 text-sm"></i>
+          </div>
+          <p class="text-gray-300 text-sm mb-4">"I've been using beats from GDMusic for all my Punjabi tracks. The vibe and energy are incredible. Highly recommend to every artist!"</p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-sm font-bold">PS</div>
+            <div>
+              <p class="font-semibold text-sm">Preet Singh</p>
+              <p class="text-gray-500 text-xs">Punjabi Rapper</p>
+            </div>
+          </div>
+        </div>
+        <div class="glass-card rounded-2xl p-6 beat-card">
+          <div class="flex gap-1 mb-4">
+            <i class="fas fa-star text-yellow-400 text-sm"></i>
+            <i class="fas fa-star text-yellow-400 text-sm"></i>
+            <i class="fas fa-star text-yellow-400 text-sm"></i>
+            <i class="fas fa-star text-yellow-400 text-sm"></i>
+            <i class="fas fa-star-half-alt text-yellow-400 text-sm"></i>
+          </div>
+          <p class="text-gray-300 text-sm mb-4">"The cinematic beats from GD are perfect for my YouTube content. Professional quality, instant downloads. Best marketplace out there!"</p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-sm font-bold">MR</div>
+            <div>
+              <p class="font-semibold text-sm">Max Rodriguez</p>
+              <p class="text-gray-500 text-xs">Content Creator</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter -->
+  <section class="py-20 relative">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="glass-card rounded-3xl p-8 md:p-14 text-center relative overflow-hidden">
+        <div class="absolute inset-0 opacity-5" style="background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(168,85,247,0.1) 10px, rgba(168,85,247,0.1) 20px);"></div>
+        <div class="relative z-10">
+          <i class="fas fa-envelope text-4xl gradient-text mb-4"></i>
+          <h2 class="font-orbitron text-3xl md:text-4xl font-bold mb-4">Stay <span class="gradient-text">Updated</span></h2>
+          <p class="text-gray-400 mb-8 max-w-md mx-auto">Get notified about new releases, exclusive deals, and upcoming features. Join our newsletter today!</p>
+          <form onsubmit="handleNewsletter(event)" class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+            <input type="email" placeholder="Enter your email" class="flex-1 px-5 py-3.5 bg-dark-800 border border-white/10 rounded-xl text-sm focus:border-neon-purple transition" required>
+            <button type="submit" class="px-6 py-3.5 bg-gradient-to-r from-neon-purple to-neon-blue rounded-xl font-semibold text-sm hover:opacity-90 transition">Subscribe</button>
+          </form>
+          <p class="text-gray-600 text-xs mt-4">No spam, unsubscribe anytime. Powered by GDMusic.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ MARKETPLACE PAGE ============ -->
+<div id="page-marketplace" class="page">
+  <div class="pt-24 pb-12">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-10">
+        <h1 class="font-orbitron text-4xl md:text-5xl font-bold mb-3">Music <span class="gradient-text">Marketplace</span></h1>
+        <p class="text-gray-400">Explore and license premium beats from GDTHEGREATEMAN</p>
+      </div>
+
+      <!-- Search & Filters -->
+      <div class="glass rounded-2xl p-6 mb-10">
+        <div class="flex flex-col md:flex-row gap-4">
+          <div class="flex-1 relative">
+            <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"></i>
+            <input type="text" id="search-input" placeholder="Search beats by title, genre, mood..." class="w-full pl-12 pr-4 py-3.5 bg-dark-800 border border-white/10 rounded-xl text-sm" oninput="searchBeats()">
+          </div>
+          <select id="filter-genre" class="px-4 py-3.5 bg-dark-800 border border-white/10 rounded-xl text-sm text-gray-300 min-w-[140px]" onchange="searchBeats()">
+            <option value="">All Genres</option>
+            <option value="hip-hop">Hip-Hop</option>
+            <option value="trap">Trap</option>
+            <option value="lofi">Lo-Fi</option>
+            <option value="punjabi">Punjabi</option>
+            <option value="pop">Pop</option>
+            <option value="cinematic">Cinematic</option>
+          </select>
+          <select id="filter-bpm" class="px-4 py-3.5 bg-dark-800 border border-white/10 rounded-xl text-sm text-gray-300 min-w-[120px]" onchange="searchBeats()">
+            <option value="">All BPM</option>
+            <option value="slow">Slow (60-90)</option>
+            <option value="mid">Mid (90-120)</option>
+            <option value="fast">Fast (120+)</option>
+          </select>
+          <select id="filter-price" class="px-4 py-3.5 bg-dark-800 border border-white/10 rounded-xl text-sm text-gray-300 min-w-[120px]" onchange="searchBeats()">
+            <option value="">All Prices</option>
+            <option value="low">Under $25</option>
+            <option value="mid">$25 - $50</option>
+            <option value="high">$50+</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Beats Grid -->
+      <div id="marketplace-beats" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <!-- Injected by JS -->
+      </div>
+
+      <div id="no-results" class="hidden text-center py-20">
+        <i class="fas fa-search text-5xl text-gray-600 mb-4"></i>
+        <p class="text-gray-400 text-lg">No beats found matching your criteria</p>
+        <button onclick="resetFilters()" class="mt-4 px-6 py-3 glass rounded-xl text-sm hover:bg-white/10 transition">Reset Filters</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ADMIN PAGE ============ -->
+<div id="page-admin" class="page">
+  <div class="pt-24 pb-12">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-10">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/10 border border-red-500/30 mb-4">
+          <i class="fas fa-shield-halved text-red-400 text-sm"></i>
+          <span class="text-red-400 text-sm font-medium">Admin Only - GDTHEGREATEMAN</span>
+        </div>
+        <h1 class="font-orbitron text-4xl md:text-5xl font-bold mb-3">Admin <span class="gradient-text">Panel</span></h1>
+        <p class="text-gray-400">Manage beats, orders, and platform content</p>
+      </div>
+
+      <!-- Admin Dashboard -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+        <div class="glass-card rounded-2xl p-5">
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 rounded-xl bg-neon-purple/20 flex items-center justify-center"><i class="fas fa-music text-neon-purple"></i></div>
+          </div>
+          <div class="font-orbitron text-2xl font-bold" id="admin-beats">24</div>
+          <p class="text-gray-500 text-xs mt-1">Total Beats</p>
+        </div>
+        <div class="glass-card rounded-2xl p-5">
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 rounded-xl bg-neon-green/20 flex items-center justify-center"><i class="fas fa-shopping-bag text-neon-green"></i></div>
+          </div>
+          <div class="font-orbitron text-2xl font-bold" id="admin-orders">156</div>
+          <p class="text-gray-500 text-xs mt-1">Total Orders</p>
+        </div>
+        <div class="glass-card rounded-2xl p-5">
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 rounded-xl bg-neon-blue/20 flex items-center justify-center"><i class="fas fa-users text-neon-blue"></i></div>
+          </div>
+          <div class="font-orbitron text-2xl font-bold" id="admin-users">89</div>
+          <p class="text-gray-500 text-xs mt-1">Total Users</p>
+        </div>
+        <div class="glass-card rounded-2xl p-5">
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-10 h-10 rounded-xl bg-yellow-500/20 flex items-center justify-center"><i class="fas fa-dollar-sign text-yellow-400"></i></div>
+          </div>
+          <div class="font-orbitron text-2xl font-bold" id="admin-revenue">$4,280</div>
+          <p class="text-gray-500 text-xs mt-1">Total Revenue</p>
+        </div>
+      </div>
+
+      <!-- Add New Beat Form -->
+      <div class="glass rounded-2xl p-6 mb-10">
+        <h3 class="font-orbitron text-xl font-bold mb-6 flex items-center gap-3">
+          <i class="fas fa-plus-circle text-neon-purple"></i> Upload New Beat
+        </h3>
+        <form onsubmit="handleAddBeat(event)" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div>
+            <label class="block text-sm text-gray-400 mb-2">Beat Title *</label>
+            <input type="text" id="beat-title" placeholder="Enter beat title" class="w-full px-4 py-3 bg-dark-800 border border-white/10 rounded-xl text-sm" required>
+          </div>
+          <div>
+            <label class="block text-sm text-gray-400 mb-2">Genre *</label>
+            <select id="beat-genre" class="w-full px-4 py-3 bg-dark-800 border border-white/10 rounded-xl text-sm" required>
+              <option value="">Select Genre</option>
+              <option value="hip-hop">Hip-Hop</option>
+              <option value="trap">Trap</option>
+              <option value="lofi">Lo-Fi</option>
+              <option value="punjabi">Punjabi</option>
+              <option value="pop">Pop</option>
+              <option value="cinematic">Cinematic</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm text-gray-400 mb-2">Mood *</label>
+            <select id="beat-mood" class="w-full px-4 py-3 bg-dark-800 border border-white/10 rounded-xl text-sm" required>
+              <option value="">Select Mood</option>
+              <option value="dark">Dark</option>
+              <option value="chill">Chill</option>
+              <option value="energetic">Energetic</option>
+              <option value="melancholic">Melancholic</option>
+              <option value="happy">Happy</option>
+              <option value="aggressive">Aggressive</option>
+              <option value="romantic">Romantic</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm text-gray-400 mb-2">BPM *</label>
+            <input type="number" id="beat-bpm" placeholder="120" min="60" max="200" class="w-full px-4 py-3 bg-dark-800 border border-white/10 rounded-xl text-sm" required>
+          </div>
+          <div>
+            <label class="block text-sm text-gray-400 mb-2">Price (USD) *</label>
+            <input type="number" id="beat-price" placeholder="29.99" min="0" step="0.01" class="w-full px-4 py-3 bg-dark-800 border border-white/10 rounded-xl text-sm" required>
+          </div>
+          <div>
+            <label class="block text-sm text-gray-400 mb-2">Upload Preview (MP3/WAV) *</label>
+            <label class="w-full px-4 py-3 bg-dark-800 border border-white/10 rounded-xl text-sm flex items-center gap-2 cursor-pointer hover:bg-white/5 transition">
+              <i class="fas fa-upload text-neon-purple"></i>
+              <span class="text-gray-500">Choose file...</span>
+              <input type="file" accept=".mp3,.wav,.wave" class="hidden" onchange="handleFileUpload(this)">
+            </label>
+          </div>
+          <div class="md:col-span-2 lg:col-span-3">
+            <label class="block text-sm text-gray-400 mb-2">Description</label>
+            <textarea id="beat-description" rows="3" placeholder="Describe the beat..." class="w-full px-4 py-3 bg-dark-800 border border-white/10 rounded-xl text-sm resize-none"></textarea>
+          </div>
+          <div class="md:col-span-2 lg:col-span-3 flex gap-3">
+            <button type="submit" class="px-8 py-3 bg-gradient-to-r from-neon-purple to-neon-blue rounded-xl font-semibold text-sm hover:opacity-90 transition">
+              <i class="fas fa-upload mr-2"></i> Upload Beat
+            </button>
+            <button type="button" onclick="clearBeatForm()" class="px-6 py-3 glass rounded-xl font-medium text-sm hover:bg-white/10 transition">Clear</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Manage Beats -->
+      <div class="glass rounded-2xl p-6">
+        <h3 class="font-orbitron text-xl font-bold mb-6 flex items-center gap-3">
+          <i class="fas fa-list text-neon-blue"></i> Manage Beats
+        </h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-gray-500 text-xs uppercase tracking-wider border-b border-white/5">
+                <th class="text-left py-3 px-3">Beat</th>
+                <th class="text-left py-3 px-3">Genre</th>
+                <th class="text-left py-3 px-3">BPM</th>
+                <th class="text-left py-3 px-3">Mood</th>
+                <th class="text-left py-3 px-3">Price</th>
+                <th class="text-left py-3 px-3">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-beats-table">
+              <!-- Injected by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PROFILE PAGE ============ -->
+<div id="page-profile" class="page">
+  <div class="pt-24 pb-12">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="glass-card rounded-3xl p-8 mb-8">
+        <div class="flex flex-col md:flex-row items-center gap-6 mb-8">
+          <div class="w-24 h-24 rounded-full bg-gradient-to-br from-neon-purple to-neon-blue p-1 animate-pulse-glow">
+            <div class="w-full h-full rounded-full bg-dark-800 flex items-center justify-center">
+              <span class="font-orbitron text-3xl font-black gradient-text">JD</span>
+            </div>
+          </div>
+          <div class="text-center md:text-left">
+            <h2 class="font-orbitron text-2xl font-bold">John Doe</h2>
+            <p class="text-gray-500">johndoe@email.com</p>
+            <span class="inline-flex items-center gap-1 mt-2 px-3 py-1 rounded-full bg-neon-purple/20 text-neon-purple text-xs font-medium">
+              <i class="fas fa-crown"></i> Pro Member
+            </span>
+          </div>
+          <button onclick="logout()" class="ml-auto px-5 py-2.5 glass rounded-xl text-sm hover:bg-white/10 transition text-gray-400">
+            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+          </button>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 mb-8">
+          <div class="text-center p-4 glass rounded-xl">
+            <div class="font-orbitron text-2xl font-bold gradient-text">12</div>
+            <p class="text-gray-500 text-xs mt-1">Purchased Beats</p>
+          </div>
+          <div class="text-center p-4 glass rounded-xl">
+            <div class="font-orbitron text-2xl font-bold gradient-text">5</div>
+            <p class="text-gray-500 text-xs mt-1">Wishlisted</p>
+          </div>
+          <div class="text-center p-4 glass rounded-xl">
+            <div class="font-orbitron text-2xl font-bold gradient-text">$340</div>
+            <p class="text-gray-500 text-xs mt-1">Total Spent</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass rounded-2xl p-6 mb-8">
+        <h3 class="font-orbitron text-lg font-bold mb-4 flex items-center gap-2">
+          <i class="fas fa-download text-neon-purple"></i> Download Library
+        </h3>
+        <div id="purchased-beats" class="space-y-3">
+          <div class="flex items-center justify-between p-4 glass rounded-xl">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-neon-purple to-neon-blue flex items-center justify-center">
+                <i class="fas fa-music text-sm"></i>
+              </div>
+              <div>
+                <p class="font-medium text-sm">Midnight Hustle</p>
+                <p class="text-gray-500 text-xs">Hip-Hop • 140 BPM</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="px-3 py-1 bg-neon-green/20 text-neon-green text-xs rounded-full">WAV + MP3</span>
+              <button class="p-2 rounded-lg glass hover:bg-white/10 transition"><i class="fas fa-download text-neon-purple text-sm"></i></button>
+            </div>
+          </div>
+          <div class="flex items-center justify-between p-4 glass rounded-xl">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-neon-blue to-cyan-400 flex items-center justify-center">
+                <i class="fas fa-music text-sm"></i>
+              </div>
+              <div>
+                <p class="font-medium text-sm">Chill Vibes 3000</p>
+                <p class="text-gray-500 text-xs">Lo-Fi • 85 BPM</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="px-3 py-1 bg-neon-green/20 text-neon-green text-xs rounded-full">WAV + MP3</span>
+              <button class="p-2 rounded-lg glass hover:bg-white/10 transition"><i class="fas fa-download text-neon-purple text-sm"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass rounded-2xl p-6">
+        <h3 class="font-orbitron text-lg font-bold mb-4 flex items-center gap-2">
+          <i class="fas fa-history text-neon-blue"></i> Order History
+        </h3>
+        <div class="space-y-3">
+          <div class="flex items-center justify-between p-4 glass rounded-xl">
+            <div>
+              <p class="font-medium text-sm">Order #GD-2024-001</p>
+              <p class="text-gray-500 text-xs">Jan 15, 2024</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="px-3 py-1 bg-neon-green/20 text-neon-green text-xs rounded-full">Completed</span>
+              <span class="font-semibold text-sm">$29.99</span>
+            </div>
+          </div>
+          <div class="flex items-center justify-between p-4 glass rounded-xl">
+            <div>
+              <p class="font-medium text-sm">Order #GD-2024-002</p>
+              <p class="text-gray-500 text-xs">Feb 3, 2024</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="px-3 py-1 bg-neon-green/20 text-neon-green text-xs rounded-full">Completed</span>
+              <span class="font-semibold text-sm">$49.99</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CART PAGE ============ -->
+<div id="page-cart" class="page">
+  <div class="pt-24 pb-12">
+    <div class="max-w-4xl mx-auto px-4">
+      <h1 class="font-orbitron text-4xl font-bold mb-8">Your <span class="gradient-text">Cart</span></h1>
+      <div id="cart-items" class="space-y-4 mb-8">
+        <!-- Cart items injected by JS -->
+      </div>
+      <div id="cart-empty" class="hidden text-center py-20">
+        <i class="fas fa-shopping-cart text-6xl text-gray-600 mb-4"></i>
+        <h3 class="text-2xl font-bold mb-2">Your cart is empty</h3>
+        <p class="text-gray-400 mb-6">Browse our marketplace to find amazing beats</p>
+        <button onclick="showPage('marketplace')" class="px-8 py-4 bg-gradient-to-r from-neon-purple to-neon-blue rounded-2xl font-bold">Explore Beats</button>
+      </div>
+      <div id="cart-summary" class="glass-card rounded-2xl p-6">
+        <div class="flex justify-between items-center mb-4">
+          <span class="text-gray-400">Subtotal</span>
+          <span id="cart-subtotal" class="font-semibold">$0.00</span>
+        </div>
+        <div class="flex justify-between items-center mb-4">
+          <span class="text-gray-400">License Fees</span>
+          <span class="font-semibold text-neon-green">Included</span>
+        </div>
+        <div class="border-t border-white/10 my-4"></div>
+        <div class="flex justify-between items-center mb-6">
+          <span class="font-bold text-lg">Total</span>
+          <span id="cart-total" class="font-orbitron text-2xl font-bold gradient-text">$0.00</span>
+        </div>
+        <button onclick="handleCheckout()" class="w-full py-4 bg-gradient-to-r from-neon-purple to-neon-blue rounded-2xl font-bold text-lg hover:opacity-90 transition shadow-lg shadow-neon-purple/30">
+          <i class="fas fa-lock mr-2"></i> Secure Checkout
+        </button>
+        <p class="text-center text-gray-600 text-xs mt-4"><i class="fas fa-shield-halved mr-1"></i> Payments secured by Stripe • Razorpay</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CHECKOUT SUCCESS ============ -->
+<div id="page-checkout" class="page">
+  <div class="pt-24 pb-12 flex items-center justify-center min-h-screen">
+    <div class="text-center max-w-md mx-auto px-4">
+      <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-neon-green to-emerald-500 flex items-center justify-center animate-beat">
+        <i class="fas fa-check text-4xl text-white"></i>
+      </div>
+      <h1 class="font-orbitron text-3xl font-bold mb-3">Payment Successful!</h1>
+      <p class="text-gray-400 mb-8">Your beats are ready for download. Check your email for the license details.</p>
+      <div class="glass-card rounded-2xl p-6 mb-8">
+        <div class="space-y-3 text-left">
+          <div class="flex justify-between"><span class="text-gray-500 text-sm">Order ID</span><span class="text-sm font-mono">#GD-2024-<span id="order-id">003</span></span></div>
+          <div class="flex justify-between"><span class="text-gray-500 text-sm">Date</span><span class="text-sm">March 2024</span></div>
+          <div class="flex justify-between"><span class="text-gray-500 text-sm">Payment</span><span class="text-sm text-neon-green">Verified</span></div>
+        </div>
+      </div>
+      <button onclick="showPage('profile')" class="px-8 py-4 bg-gradient-to-r from-neon-purple to-neon-blue rounded-2xl font-bold">Go to Downloads</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODALS ============ -->
+<!-- Login Modal -->
+<div id="modal-login" class="fixed inset-0 z-50 hidden items-center justify-center modal-overlay p-4">
+  <div class="glass-strong rounded-3xl p-8 w-full max-w-md relative animate-slideUp">
+    <button onclick="closeModal('login')" class="absolute top-4 right-4 w-8 h-8 rounded-lg glass flex items-center justify-center hover:bg-white/10 transition">
+      <i class="fas fa-times text-gray-400 text-sm"></i>
+    </button>
+    <div class="text-center mb-8">
+      <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-neon-purple to-neon-blue flex items-center justify-center">
+        <i class="fas fa-wave-square text-xl"></i>
+      </div>
+      <h2 class="font-orbitron text-2xl font-bold">Welcome Back</h2>
+      <p class="text-gray-500 text-sm mt-1">Sign in to your GDMusic account</p>
+    </div>
+    <form onsubmit="handleLogin(event)" class="space-y-4">
+      <div>
+        <label class="block text-sm text-gray-400 mb-2">Email</label>
+        <input type="email" placeholder="your@email.com" class="w-full px-4 py-3.5 bg-dark-800 border border-white/10 rounded-xl text-sm" required>
+      </div>
+      <div>
+        <label class="block text-sm text-gray-400 mb-2">Password</label>
+        <input type="password" placeholder="••••••••" class="w-full px-4 py-3.5 bg-dark-800 border border-white/10 rounded-xl text-sm" required>
+      </div>
+      <div class="flex items-center justify-between">
+        <label class="flex items-center gap-2 text-sm text-gray-400 cursor-pointer">
+          <input type="checkbox" class="w-4 h-4 rounded accent-neon-purple"> Remember me
+        </label>
+        <a onclick="openModal('forgot')" class="text-sm text-neon-purple hover:underline cursor-pointer">Forgot password?</a>
+      </div>
+      <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-neon-purple to-neon-blue rounded-xl font-bold hover:opacity-90 transition">Sign In</button>
+    </form>
+    <div class="flex items-center gap-4 my-6">
+      <div class="flex-1 h-px bg-white/10"></div>
+      <span class="text-gray-600 text-xs">OR</span>
+      <div class="flex-1 h-px bg-white/10"></div>
+    </div>
+    <button onclick="handleGoogleLogin()" class="w-full py-3.5 glass rounded-xl font-medium text-sm hover:bg-white/10 transition flex items-center justify-center gap-3">
+      <i class="fab fa-google text-red-400"></i> Continue with Google
+    </button>
+    <p class="text-center text-sm text-gray-500 mt-6">Don't have an account? <a onclick="openModal('signup')" class="text-neon-purple hover:underline cursor-pointer font-medium">Sign Up</a></p>
+  </div>
+</div>
+
+<!-- Signup Modal -->
+<div id="modal-signup" class="fixed inset-0 z-50 hidden items-center justify-center modal-overlay p-4">
+  <div class="glass-strong rounded-3xl p-8 w-full max-w-md relative animate-slideUp">
+    <button onclick="closeModal('signup')" class="absolute top-4 right-4 w-8 h-8 rounded-lg glass flex items-center justify-center hover:bg-white/10 transition">
+      <i class="fas fa-times text-gray-400 text-sm"></i>
+    </button>
+    <div class="text-center mb-8">
+      <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-neon-purple to-neon-blue flex items-center justify-center">
+        <i class="fas fa-wave-square text-xl"></i>
+      </div>
+      <h2 class="font-orbitron text-2xl font-bold">Create Account</h2>
+      <p class="text-gray-500 text-sm mt-1">Join the GDMusic community</p>
+    </div>
+    <form onsubmit="handleSignup(event)" class="space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm text-gray-400 mb-2">First Name</label>
+          <input type="text" placeholder="John" class="w-full px-4 py-3.5 bg-dark-800 border border-white/10 rounded-xl text-sm" required>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-400 mb-2">Last Name</label>
+          <input type="text" placeholder="Doe" class="w-full px-4 py-3.5 bg-dark-800 border border-white/10 rounded-xl text-sm" required>
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm text-gray-400 mb-2">Email</label>
+        <input type="email" placeholder="your@email.com" class="w-full px-4 py-3.5 bg-dark-800 border border-white/10 rounded-xl text-sm" required>
+      </div>
+      <div>
+        <label class="block text-sm text-gray-400 mb-2">Password</label>
+        <input type="password" placeholder="••••••••" class="w-full px-4 py-3.5 bg-dark-800 border border-white/10 rounded-xl text-sm" required>
+      </div>
+      <div>
+        <label class="flex items-start gap-2 text-sm text-gray-400 cursor-pointer">
+          <input type="checkbox" class="w-4 h-4 mt-0.5 rounded accent-neon-purple" required>
+          <span>I agree to the <a class="text-neon-purple hover:underline">Terms</a> and <a class="text-neon-purple hover:underline">Privacy Policy</a></span>
+        </label>
+      </div>
+      <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-neon-purple to-neon-blue rounded-xl font-bold hover:opacity-90 transition">Create Account</button>
+    </form>
+    <div class="flex items-center gap-4 my-6">
+      <div class="flex-1 h-px bg-white/10"></div>
+      <span class="text-gray-600 text-xs">OR</span>
+      <div class="flex-1 h-px bg-white/10"></div>
+    </div>
+    <button onclick="handleGoogleLogin()" class="w-full py-3.5 glass rounded-xl font-medium text-sm hover:bg-white/10 transition flex items-center justify-center gap-3">
+      <i class="fab fa-google text-red-400"></i> Sign Up with Google
+    </button>
+    <p class="text-center text-sm text-gray-500 mt-6">Already have an account? <a onclick="openModal('login')" class="text-neon-purple hover:underline cursor-pointer font-medium">Sign In</a></p>
+  </div>
+</div>
+
+<!-- Forgot Password Modal -->
+<div id="modal-forgot" class="fixed inset-0 z-50 hidden items-center justify-center modal-overlay p-4">
+  <div class="glass-strong rounded-3xl p-8 w-full max-w-md relative animate-slideUp">
+    <button onclick="closeModal('forgot')" class="absolute top-4 right-4 w-8 h-8 rounded-lg glass flex items-center justify-center hover:bg-white/10 transition">
+      <i class="fas fa-times text-gray-400 text-sm"></i>
+    </button>
+    <div class="text-center mb-8">
+      <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-neon-purple to-neon-blue flex items-center justify-center">
+        <i class="fas fa-key text-xl"></i>
+      </div>
+      <h2 class="font-orbitron text-2xl font-bold">Reset Password</h2>
+      <p class="text-gray-500 text-sm mt-1">Enter your email to receive reset link</p>
+    </div>
+    <form onsubmit="handleForgotPassword(event)" class="space-y-4">
+      <div>
+        <label class="block text-sm text-gray-400 mb-2">Email</label>
+        <input type="email" placeholder="your@email.com" class="w-full px-4 py-3.5 bg-dark-800 border border-white/10 rounded-xl text-sm" required>
+      </div>
+      <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-neon-purple to-neon-blue rounded-xl font-bold hover:opacity-90 transition">Send Reset Link</button>
+    </form>
+    <p class="text-center text-sm text-gray-500 mt-6"><a onclick="openModal('login')" class="text-neon-purple hover:underline cursor-pointer font-medium">Back to Login</a></p>
+  </div>
+</div>
+
+<!-- Mini Audio Player -->
+<div id="audio-player" class="fixed bottom-0 left-0 right-0 z-40 glass-strong border-t border-white/5 hidden">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
+    <div id="player-cover" class="w-12 h-12 rounded-xl bg-gradient-to-br from-neon-purple to-neon-blue flex items-center justify-center flex-shrink-0">
+      <i class="fas fa-music text-sm"></i>
+    </div>
+    <div class="flex-1 min-w-0">
+      <p id="player-title" class="font-medium text-sm truncate">Beat Title</p>
+      <p id="player-artist" class="text-gray-500 text-xs">GDTHEGREATEMAN</p>
+      <div class="flex items-center gap-2 mt-1">
+        <button onclick="togglePlay()" id="play-btn" class="w-8 h-8 rounded-full bg-neon-purple flex items-center justify-center hover:scale-110 transition">
+          <i class="fas fa-play text-xs"></i>
+        </button>
+        <div class="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
+          <div id="player-progress" class="h-full bg-gradient-to-r from-neon-purple to-neon-blue rounded-full progress-bar" style="width: 0%"></div>
+        </div>
+        <span id="player-time" class="text-xs text-gray-500 font-mono">0:00</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <button class="p-2 text-gray-500 hover:text-white transition"><i class="fas fa-volume-up text-sm"></i></button>
+      <button onclick="closeAudioPlayer()" class="p-2 text-gray-500 hover:text-white transition"><i class="fas fa-times text-sm"></i></button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Notifications -->
+<div id="toast-container" class="fixed top-24 right-4 z-50 space-y-3"></div>
+
+<!-- Footer -->
+<footer class="border-t border-white/5 py-16">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+      <div>
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-neon-purple to-neon-blue flex items-center justify-center">
+            <i class="fas fa-wave-square text-lg"></i>
+          </div>
+          <span class="font-orbitron text-lg font-bold gradient-text">GD<span class="text-white">MUSIC</span></span>
+        </div>
+        <p class="text-gray-500 text-sm">Premium music marketplace owned and managed by <strong class="text-neon-purple">GDTHEGREATEMAN</strong>. High-quality beats for every artist.</p>
+      </div>
+      <div>
+        <h4 class="font-semibold text-sm mb-4 text-white">Marketplace</h4>
+        <ul class="space-y-2 text-sm text-gray-500">
+          <li><a class="hover:text-neon-purple transition cursor-pointer">Browse All Beats</a></li>
+          <li><a class="hover:text-neon-purple transition cursor-pointer">New Releases</a></li>
+          <li><a class="hover:text-neon-purple transition cursor-pointer">Top Sellers</a></li>
+          <li><a class="hover:text-neon-purple transition cursor-pointer">Free Beats</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold text-sm mb-4 text-white">Support</h4>
+        <ul class="space-y-2 text-sm text-gray-500">
+          <li><a class="hover:text-neon-purple transition cursor-pointer">Help Center</a></li>
+          <li><a class="hover:text-neon-purple transition cursor-pointer">License Info</a></li>
+          <li><a class="hover:text-neon-purple transition cursor-pointer">Contact Us</a></li>
+          <li><a class="hover:text-neon-purple transition cursor-pointer">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold text-sm mb-4 text-white">Connect</h4>
+        <div class="flex gap-3">
+          <a class="w-10 h-10 rounded-xl glass flex items-center justify-center hover:bg-white/10 transition cursor-pointer"><i class="fab fa-instagram text-gray-400"></i></a>
+          <a class="w-10 h-10 rounded-xl glass flex items-center justify-center hover:bg-white/10 transition cursor-pointer"><i class="fab fa-twitter text-gray-400"></i></a>
+          <a class="w-10 h-10 rounded-xl glass flex items-center justify-center hover:bg-white/10 transition cursor-pointer"><i class="fab fa-youtube text-gray-400"></i></a>
+          <a class="w-10 h-10 rounded-xl glass flex items-center justify-center hover:bg-white/10 transition cursor-pointer"><i class="fab fa-tiktok text-gray-400"></i></a>
+        </div>
+        <div class="mt-4">
+          <p class="text-gray-500 text-xs"><i class="fas fa-envelope mr-2 text-neon-purple"></i>support@gdmusic.com</p>
+          <p class="text-gray-500 text-xs mt-1"><i class="fas fa-phone mr-2 text-neon-purple"></i>+1 (555) 123-4567</p>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      <p class="text-gray-600 text-xs">© 2024 GDMusic. All rights reserved. Owned by <strong class="text-neon-purple">GDTHEGREATEMAN</strong></p>
+      <div class="flex items-center gap-4 text-xs text-gray-600">
+        <a class="hover:text-gray-400 transition cursor-pointer">Privacy Policy</a>
+        <span>|</span>
+        <a class="hover:text-gray-400 transition cursor-pointer">Terms of Service</a>
+        <span>|</span>
+        <a class="hover:text-gray-400 transition cursor-pointer">Refund Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ==================== DATA ====================
+const beatsData = [
+  { id: 1, title: "Midnight Hustle", genre: "hip-hop", mood: "dark", bpm: 140, price: 29.99, duration: "2:34", plays: 4520, featured: true, color: "from-orange-500 to-red-500", tags: ["Trending"] },
+  { id: 2, title: "Neon Dreams", genre: "trap", mood: "energetic", bpm: 145, price: 39.99, duration: "2:18", plays: 3210, featured: true, color: "from-neon-purple to-neon-pink", tags: ["Hot"] },
+  { id: 3, title: "Chill Vibes 3000", genre: "lofi", mood: "chill", bpm: 85, price: 19.99, duration: "3:02", plays: 5890, featured: true, color: "from-blue-400 to-cyan-400", tags: ["Top"] },
+  { id: 4, title: "Desi Swag", genre: "punjabi", mood: "energetic", bpm: 105, price: 34.99, duration: "2:45", plays: 2340, featured: false, color: "from-amber-500 to-yellow-500", tags: [] },
+  { id: 5, title: "Electric Pulse", genre: "trap", mood: "aggressive", bpm: 150, price: 44.99, duration: "2:08", plays: 1890, featured: true, color: "from-neon-pink to-rose-500", tags: ["New"] },
+  { id: 6, title: "Golden Hour", genre: "pop", mood: "happy", bpm: 118, price: 24.99, duration: "2:56", plays: 4100, featured: false, color: "from-pink-400 to-rose-400", tags: [] },
+  { id: 7, title: "Dark Matter", genre: "hip-hop", mood: "dark", bpm: 135, price: 49.99, duration: "2:22", plays: 1560, featured: true, color: "from-gray-600 to-gray-800", tags: ["Premium"] },
+  { id: 8, title: "Sunset Boulevard", genre: "cinematic", mood: "melancholic", bpm: 90, price: 59.99, duration: "3:15", plays: 980, featured: true, color: "from-emerald-400 to-teal-500", tags: ["Cinematic"] },
+  { id: 9, title: "Rainy Day", genre: "lofi", mood: "chill", bpm: 80, price: 17.99, duration: "2:48", plays: 6230, featured: false, color: "from-indigo-400 to-blue-500", tags: [] },
+  { id: 10, title: "Street King", genre: "hip-hop", mood: "aggressive", bpm: 142, price: 32.99, duration: "2:30", plays: 2890, featured: false, color: "from-orange-600 to-red-600", tags: [] },
+  { id: 11, title: "Punjab's Finest", genre: "punjabi", mood: "energetic", bpm: 110, price: 29.99, duration: "2:38", plays: 3420, featured: true, color: "from-yellow-500 to-orange-500", tags: ["Trending"] },
+  { id: 12, title: "Starlight", genre: "pop", mood: "romantic", bpm: 100, price: 22.99, duration: "3:05", plays: 4560, featured: false, color: "from-violet-400 to-purple-500", tags: [] },
+  { id: 13, title: "Thunder Strike", genre: "trap", mood: "aggressive", bpm: 155, price: 54.99, duration: "1:58", plays: 1230, featured: false, color: "from-red-600 to-pink-600", tags: ["Premium"] },
+  { id: 14, title: "Lost in Tokyo", genre: "cinematic", mood: "dark", bpm: 95, price: 64.99, duration: "3:42", plays: 870, featured: true, color: "from-purple-600 to-indigo-800", tags: ["Cinematic", "Premium"] },
+  { id: 15, title: "Coffee Shop", genre: "lofi", mood: "chill", bpm: 75, price: 14.99, duration: "3:10", plays: 7120, featured: false, color: "from-amber-300 to-yellow-300", tags: ["Best Seller"] },
+  { id: 16, title: "Mafia Boss", genre: "hip-hop", mood: "dark", bpm: 138, price: 37.99, duration: "2:20", plays: 2650, featured: false, color: "from-zinc-600 to-neutral-800", tags: [] },
+];
+
+let cart = [];
+let isPlaying = false;
+let currentBeat = null;
+let playerInterval = null;
+let playerProgress = 0;
+let isLoggedIn = false;
+let adminBeats = [...beatsData];
+
+// ==================== PAGE NAVIGATION ====================
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById('page-' + page);
+  if (target) {
+    target.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (page === 'marketplace') renderMarketplace();
+    if (page === 'admin') renderAdminTable();
+  }
+}
+
+// ==================== NAV ====================
+function toggleMobileMenu() {
+  const menu = document.getElementById('mobile-menu');
+  menu.classList.toggle('hidden');
+}
+
+function toggleCart() {
+  showPage('cart');
+  renderCart();
+}
+
+// ==================== MODALS ====================
+function openModal(name) {
+  document.getElementById('modal-' + name).classList.remove('hidden');
+  document.getElementById('modal-' + name).classList.add('flex');
+}
+
+function closeModal(name) {
+  document.getElementById('modal-' + name).classList.add('hidden');
+  document.getElementById('modal-' + name).classList.remove('flex');
+}
+
+document.querySelectorAll('[id^="modal-"]').forEach(modal => {
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+  });
+});
+
+// ==================== AUTH ====================
+function handleLogin(e) {
+  e.preventDefault();
+  isLoggedIn = true;
+  closeModal('login');
+  document.getElementById('auth-buttons').classList.add('hidden');
+  document.getElementById('user-menu').classList.remove('hidden');
+  document.getElementById('user-menu').classList.add('flex');
+  showToast('Welcome back! You are now logged in.', 'success');
+}
+
+function handleSignup(e) {
+  e.preventDefault();
+  isLoggedIn = true;
+  closeModal('signup');
+  document.getElementById('auth-buttons').classList.add('hidden');
+  document.getElementById('user-menu').classList.remove('hidden');
+  document.getElementById('user-menu').classList.add('flex');
+  showToast('Account created successfully! Welcome to GDMusic.', 'success');
+}
+
+function handleGoogleLogin() {
+  isLoggedIn = true;
+  closeModal('login');
+  closeModal('signup');
+  document.getElementById('auth-buttons').classList.add('hidden');
+  document.getElementById('user-menu').classList.remove('hidden');
+  document.getElementById('user-menu').classList.add('flex');
+  showToast('Logged in with Google successfully!', 'success');
+}
+
+function handleForgotPassword(e) {
+  e.preventDefault();
+  closeModal('forgot');
+  showToast('Password reset link sent to your email!', 'info');
+}
+
+function logout() {
+  isLoggedIn = false;
+  document.getElementById('auth-buttons').classList.remove('hidden');
+  document.getElementById('user-menu').classList.add('hidden');
+  document.getElementById('user-menu').classList.remove('flex');
+  showPage('home');
+  showToast('You have been logged out.', 'info');
+}
+
+// ==================== NEWSLETTER ====================
+function handleNewsletter(e) {
+  e.preventDefault();
+  showToast('Thank you for subscribing to GDMusic!', 'success');
+  e.target.reset();
+}
+
+// ==================== BEAT CARDS ====================
+function createBeatCard(beat, showActions = true) {
+  const isInCart = cart.some(b => b.id === beat.id);
+  return `
+    <div class="beat-card glass-card rounded-2xl overflow-hidden group">
+      <div class="relative">
+        <div class="h-36 bg-gradient-to-br ${beat.color} opacity-80 relative overflow-hidden">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <i class="fas fa-music text-white/20 text-6xl"></i>
+          </div>
+          <div class="absolute top-3 left-3 flex gap-2">
+            ${beat.tags.map(t => `<span class="px-2 py-0.5 rounded-full bg-black/40 backdrop-blur-sm text-[10px] font-bold uppercase tracking-wider text-white">${t}</span>`).join('')}
+          </div>
+          <div class="absolute top-3 right-3 flex items-center gap-1 bg-black/40 backdrop-blur-sm rounded-full px-2 py-0.5">
+            <i class="fas fa-play text-[10px] text-white"></i>
+            <span class="text-[10px] text-white">${(beat.plays/1000).toFixed(1)}K</span>
+          </div>
+        </div>
+        <button onclick="togglePlay('${beat.title}', ${beat.id})" class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+          <div class="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border-2 border-white/40">
+            <i class="fas fa-play text-white text-lg ml-1"></i>
+          </div>
+        </button>
+      </div>
+      <div class="p-4">
+        <div class="flex items-start justify-between mb-2">
+          <div>
+            <h3 class="font-semibold text-sm truncate pr-2">${beat.title}</h3>
+            <p class="text-gray-500 text-xs capitalize">${beat.genre} • ${beat.mood}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 text-xs text-gray-500 mb-3">
+          <span class="flex items-center gap-1"><i class="fas fa-clock"></i> ${beat.duration}</span>
+          <span class="flex items-center gap-1"><i class="fas fa-tachometer-alt"></i> ${beat.bpm} BPM</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="font-orbitron text-lg font-bold gradient-text">$${beat.price.toFixed(2)}</span>
+          <div class="flex gap-2">
+            ${showActions ? `
+              <button onclick="toggleWishlist(${beat.id})" class="p-2 rounded-lg glass hover:bg-white/10 transition text-gray-400 hover:text-neon-pink" id="wish-${beat.id}">
+                <i class="far fa-heart text-sm"></i>
+              </button>
+              <button onclick="${isInCart ? `showPage('cart')` : `addToCart(${beat.id})`}" class="px-3 py-2 rounded-lg bg-gradient-to-r from-neon-purple to-neon-blue text-xs font-semibold hover:opacity-90 transition ${isInCart ? 'opacity-50' : ''}">
+                <i class="${isInCart ? 'fas fa-check' : 'fas fa-cart-plus'} mr-1"></i> ${isInCart ? 'In Cart' : 'Add'}
+              </button>
+            ` : `
+              <button onclick="removeBeat(${beat.id})" class="p-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition"><i class="fas fa-trash text-sm"></i></button>
+            `}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ==================== RENDER SECTIONS ====================
+function renderTrending() {
+  const container = document.getElementById('trending-beats');
+  const featured = adminBeats.filter(b => b.featured).slice(0, 8);
+  container.innerHTML = featured.map(b => createBeatCard(b)).join('');
+}
+
+function renderMarketplace() {
+  const container = document.getElementById('marketplace-beats');
+  const search = document.getElementById('search-input').value.toLowerCase();
+  const genre = document.getElementById('filter-genre').value;
+  const bpmFilter = document.getElementById('filter-bpm').value;
+  const priceFilter = document.getElementById('filter-price').value;
+
+  let filtered = adminBeats.filter(b => {
+    const matchSearch = b.title.toLowerCase().includes(search) || b.genre.includes(search) || b.mood.includes(search);
+    const matchGenre = !genre || b.genre === genre;
+    const matchBpm = !bpmFilter || (bpmFilter === 'slow' && b.bpm < 90) || (bpmFilter === 'mid' && b.bpm >= 90 && b.bpm <= 120) || (bpmFilter === 'fast' && b.bpm > 120);
+    const matchPrice = !priceFilter || (priceFilter === 'low' && b.price < 25) || (priceFilter === 'mid' && b.price >= 25 && b.price <= 50) || (priceFilter === 'high' && b.price > 50);
+    return matchSearch && matchGenre && matchBpm && matchPrice;
+  });
+
+  container.innerHTML = filtered.map(b => createBeatCard(b)).join('');
+  document.getElementById('no-results').classList.toggle('hidden', filtered.length > 0);
+}
+
+function searchBeats() {
+  renderMarketplace();
+}
+
+function resetFilters() {
+  document.getElementById('search-input').value = '';
+  document.getElementById('filter-genre').value = '';
+  document.getElementById('filter-bpm').value = '';
+  document.getElementById('filter-price').value = '';
+  renderMarketplace();
+}
+
+function filterByCategory(cat) {
+  showPage('marketplace');
+  setTimeout(() => {
+    document.getElementById('filter-genre').value = cat;
+    renderMarketplace();
+  }, 100);
+}
+
+// ==================== CART ====================
+function addToCart(id) {
+  const beat = adminBeats.find(b => b.id === id);
+  if (!beat || cart.find(b => b.id === id)) return;
+  cart.push(beat);
+  updateCartCount();
+  showToast(`${beat.title} added to cart!`, 'success');
+  renderTrending();
+  renderMarketplace();
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(b => b.id !== id);
+  updateCartCount();
+  renderCart();
+  renderTrending();
+  renderMarketplace();
+}
+
+function updateCartCount() {
+  document.getElementById('cart-count').textContent = cart.length;
+}
+
+function renderCart() {
+  const container = document.getElementById('cart-items');
+  const empty = document.getElementById('cart-empty');
+  const summary = document.getElementById('cart-summary');
+
+  if (cart.length === 0) {
+    container.innerHTML = '';
+    empty.classList.remove('hidden');
+    summary.classList.add('hidden');
+    return;
+  }
+
+  empty.classList.add('hidden');
+  summary.classList.remove('hidden');
+
+  container.innerHTML = cart.map(b => `
+    <div class="flex items-center justify-between p-4 glass rounded-2xl">
+      <div class="flex items-center gap-4">
+        <div class="w-14 h-14 rounded-xl bg-gradient-to-br ${b.color} flex items-center justify-center">
+          <i class="fas fa-music text-white/60"></i>
+        </div>
+        <div>
+          <p class="font-semibold text-sm">${b.title}</p>
+          <p class="text-gray-500 text-xs capitalize">${b.genre} • ${b.bpm} BPM • ${b.duration}</p>
+          <p class="text-xs text-gray-600 mt-1">Includes: MP3 + WAV + License</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="font-orbitron font-bold gradient-text">$${b.price.toFixed(2)}</span>
+        <button onclick="removeFromCart(${b.id})" class="p-2 rounded-lg glass hover:bg-red-500/20 text-gray-400 hover:text-red-400 transition">
+          <i class="fas fa-trash text-sm"></i>
+        </button>
+      </div>
+    </div>
+  `).join('');
+
+  const total = cart.reduce((sum, b) => sum + b.price, 0);
+  document.getElementById('cart-subtotal').textContent = '$' + total.toFixed(2);
+  document.getElementById('cart-total').textContent = '$' + total.toFixed(2);
+}
+
+function handleCheckout() {
+  if (cart.length === 0) return;
+  showPage('checkout');
+  document.getElementById('order-id').textContent = Math.floor(1000 + Math.random() * 9000);
+  cart = [];
+  updateCartCount();
+}
+
+// ==================== AUDIO PLAYER ====================
+function togglePlay(title) {
+  const player = document.getElementById('audio-player');
+  const playerTitle = document.getElementById('player-title');
+  const playBtn = document.getElementById('play-btn');
+
+  player.classList.remove('hidden');
+  playerTitle.textContent = title;
+
+  if (isPlaying) {
+    playBtn.innerHTML = '<i class="fas fa-play text-xs"></i>';
+    clearInterval(playerInterval);
+    isPlaying = false;
+  } else {
+    playBtn.innerHTML = '<i class="fas fa-pause text-xs"></i>';
+    isPlaying = true;
+    playerProgress = 0;
+    document.getElementById('player-progress').style.width = '0%';
+    playerInterval = setInterval(() => {
+      if (playerProgress >= 100) {
+        clearInterval(playerInterval);
+        playBtn.innerHTML = '<i class="fas fa-play text-xs"></i>';
+        isPlaying = false;
+        playerProgress = 0;
+      } else {
+        playerProgress += 0.5;
+        document.getElementById('player-progress').style.width = playerProgress + '%';
+        const secs = Math.floor(playerProgress * 1.8);
+        const m = Math.floor(secs / 60);
+        const s = secs % 60;
+        document.getElementById('player-time').textContent = `${m}:${s.toString().padStart(2, '0')}`;
+      }
+    }, 100);
+  }
+}
+
+function closeAudioPlayer() {
+  clearInterval(playerInterval);
+  isPlaying = false;
+  document.getElementById('audio-player').classList.add('hidden');
+}
+
+// ==================== WISHLIST ====================
+const wishlist = new Set();
+function toggleWishlist(id) {
+  const el = document.getElementById('wish-' + id);
+  if (wishlist.has(id)) {
+    wishlist.delete(id);
+    if (el) { el.innerHTML = '<i class="far fa-heart text-sm"></i>'; el.classList.remove('text-neon-pink'); }
+    showToast('Removed from wishlist', 'info');
+  } else {
+    wishlist.add(id);
+    if (el) { el.innerHTML = '<i class="fas fa-heart text-sm"></i>'; el.classList.add('text-neon-pink'); }
+    showToast('Added to wishlist!', 'success');
+  }
+}
+
+// ==================== ADMIN ====================
+function handleAddBeat(e) {
+  e.preventDefault();
+  const title = document.getElementById('beat-title').value;
+  const genre = document.getElementById('beat-genre').value;
+  const mood = document.getElementById('beat-mood').value;
+  const bpm = parseInt(document.getElementById('beat-bpm').value);
+  const price = parseFloat(document.getElementById('beat-price').value);
+  const description = document.getElementById('beat-description').value;
+
+  const colors = ['from-neon-purple to-neon-pink', 'from-neon-blue to-cyan-400', 'from-orange-500 to-red-500', 'from-emerald-500 to-teal-500', 'from-amber-500 to-yellow-500', 'from-pink-500 to-rose-500'];
+  const color = colors[Math.floor(Math.random() * colors.length)];
+
+  const newBeat = {
+    id: adminBeats.length + 1,
+    title, genre, mood, bpm, price,
+    duration: `${Math.floor(Math.random() * 2 + 2)}:${Math.floor(Math.random() * 60).toString().padStart(2, '0')}`,
+    plays: 0, featured: false, color, tags: ['New'],
+    description
+  };
+
+  adminBeats.unshift(newBeat);
+  document.getElementById('admin-beats').textContent = adminBeats.length;
+  clearBeatForm();
+  renderAdminTable();
+  renderTrending();
+  showToast(`"${title}" has been uploaded successfully!`, 'success');
+}
+
+function clearBeatForm() {
+  document.getElementById('beat-title').value = '';
+  document.getElementById('beat-genre').value = '';
+  document.getElementById('beat-mood').value = '';
+  document.getElementById('beat-bpm').value = '';
+  document.getElementById('beat-price').value = '';
+  document.getElementById('beat-description').value = '';
+}
+
+function renderAdminTable() {
+  const tbody = document.getElementById('admin-beats-table');
+  tbody.innerHTML = adminBeats.map(b => `
+    <tr class="border-b border-white/5 hover:bg-white/[0.02] transition">
+      <td class="py-3 px-3">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br ${b.color} flex items-center justify-center flex-shrink-0">
+            <i class="fas fa-music text-white/60 text-[10px]"></i>
+          </div>
+          <span class="font-medium text-sm">${b.title}</span>
+        </div>
+      </td>
+      <td class="py-3 px-3 text-sm text-gray-400 capitalize">${b.genre}</td>
+      <td class="py-3 px-3 text-sm text-gray-400">${b.bpm}</td>
+      <td class="py-3 px-3 text-sm text-gray-400 capitalize">${b.mood}</td>
+      <td class="py-3 px-3 text-sm font-semibold">$${b.price.toFixed(2)}</td>
+      <td class="py-3 px-3">
+        <div class="flex gap-2">
+          <button onclick="editBeat(${b.id})" class="p-1.5 rounded-lg glass hover:bg-white/10 transition text-gray-400 hover:text-neon-blue"><i class="fas fa-edit text-xs"></i></button>
+          <button onclick="removeBeat(${b.id})" class="p-1.5 rounded-lg glass hover:bg-red-500/20 transition text-gray-400 hover:text-red-400"><i class="fas fa-trash text-xs"></i></button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function removeBeat(id) {
+  if (confirm('Are you sure you want to delete this beat?')) {
+    adminBeats = adminBeats.filter(b => b.id !== id);
+    document.getElementById('admin-beats').textContent = adminBeats.length;
+    renderAdminTable();
+    renderTrending();
+    showToast('Beat deleted successfully', 'info');
+  }
+}
+
+function editBeat(id) {
+  const beat = adminBeats.find(b => b.id === id);
+  if (!beat) return;
+  document.getElementById('beat-title').value = beat.title;
+  document.getElementById('beat-genre').value = beat.genre;
+  document.getElementById('beat-mood').value = beat.mood;
+  document.getElementById('beat-bpm').value = beat.bpm;
+  document.getElementById('beat-price').value = beat.price;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  showToast(`Editing "${beat.title}" - make changes and upload to save`, 'info');
+}
+
+function handleFileUpload(input) {
+  if (input.files.length > 0) {
+    const fileName = input.closest('label').querySelector('span');
+    if (fileName) fileName.textContent = input.files[0].name;
+    fileName.classList.remove('text-gray-500');
+    fileName.classList.add('text-neon-purple');
+  }
+}
+
+// ==================== TOAST ====================
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  const colors = {
+    success: 'from-neon-green to-emerald-500',
+    error: 'from-red-500 to-rose-500',
+    info: 'from-neon-blue to-cyan-500',
+    warning: 'from-yellow-500 to-amber-500'
+  };
+  const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle', warning: 'fa-exclamation-triangle' };
+
+  toast.className = `glass-strong rounded-xl p-4 flex items-center gap-3 min-w-[280px] max-w-sm animate-slideIn`;
+  toast.innerHTML = `
+    <div class="w-8 h-8 rounded-lg bg-gradient-to-br ${colors[type]} flex items-center justify-center flex-shrink-0">
+      <i class="fas ${icons[type]} text-white text-sm"></i>
+    </div>
+    <p class="text-sm flex-1">${message}</p>
+    <button onclick="this.parentElement.remove()" class="text-gray-500 hover:text-white transition"><i class="fas fa-times text-xs"></i></button>
+  `;
+
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 4000);
+}
+
+// ==================== PARTICLES ====================
+function createParticles() {
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.top = Math.random() * 100 + '%';
+    p.style.animationDuration = (Math.random() * 10 + 10) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    p.style.width = (Math.random() * 4 + 2) + 'px';
+    p.style.height = p.style.width;
+    p.style.opacity = Math.random() * 0.5 + 0.1;
+    container.appendChild(p);
+  }
+}
+
+// ==================== NAVBAR SCROLL ====================
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+  const navbar = document.getElementById('navbar');
+  const scroll = window.pageYOffset;
+  if (scroll > 100) {
+    navbar.style.background = 'rgba(10,10,15,0.95)';
+    navbar.style.backdropFilter = 'blur(20px)';
+    navbar.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+  } else {
+    navbar.style.background = '';
+    navbar.style.backdropFilter = '';
+    navbar.style.borderBottom = '';
+  }
+  lastScroll = scroll;
+});
+
+// ==================== INIT ====================
+document.addEventListener('DOMContentLoaded', () => {
+  createParticles();
+  renderTrending();
+  renderAdminTable();
+});
+
+// Intersection Observer for scroll animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('animate-slideUp');
+      entry.target.style.opacity = '1';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.beat-card, .glass-card').forEach(el => {
+  el.style.opacity = '0';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
